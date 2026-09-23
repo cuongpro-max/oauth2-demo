@@ -39,14 +39,9 @@ public class AuthRestController {
             @ApiResponse(responseCode = "500", description = "Lỗi kết nối Keycloak Server")
     })
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-        try {
-            log.info("[REST API] Yêu cầu đăng nhập từ user: {}", loginDto.getUsername());
-            AuthResponseDto response = userService.authenticateApi(loginDto);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            log.error("[REST API] Lỗi đăng nhập: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        log.info("[REST API] Yêu cầu đăng nhập từ user: {}", loginDto.getUsername());
+        AuthResponseDto response = userService.authenticateApi(loginDto);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/auth/register")
@@ -57,18 +52,20 @@ public class AuthRestController {
             @ApiResponse(responseCode = "409", description = "Tên đăng nhập hoặc Email đã tồn tại")
     })
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
-        try {
-            log.info("[REST API] Yêu cầu đăng ký tài khoản: {}", registerDto.getUsername());
-            userService.register(registerDto);
-            return ResponseEntity.ok(Map.of(
-                    "status", "SUCCESS",
-                    "message", "Đăng ký tài khoản thành công trên Keycloak!",
-                    "username", registerDto.getUsername()
-            ));
-        } catch (Exception e) {
-            log.error("[REST API] Lỗi đăng ký: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        log.info("[REST API] Yêu cầu đăng ký tài khoản: {}", registerDto.getUsername());
+        userService.register(registerDto);
+        return ResponseEntity.ok(Map.of(
+                "status", "SUCCESS",
+                "message", "Đăng ký tài khoản thành công trên Keycloak!",
+                "username", registerDto.getUsername()
+        ));
+    }
+
+    @GetMapping("/test/telegram-error")
+    @Operation(summary = "4. API Test Cảnh báo Telegram", description = "Chủ động bắn ngoại lệ RuntimeException để kiểm tra bot Telegram gửi cảnh báo ngay tức thì")
+    public ResponseEntity<?> testTelegramError() {
+        log.info("[REST API] Kích hoạt giả lập lỗi để test Telegram alert");
+        throw new RuntimeException("Đây là ngoại lệ giả lập (Test Telegram Alert) từ OAuth2 Demo!");
     }
 
     @GetMapping("/user/profile")
