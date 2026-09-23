@@ -1,5 +1,7 @@
 package com.keycloak.oauth2_demo.keycloak;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -13,7 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class KeycloakService {
 
     @Value("${spring.security.oauth2.client.provider.keycloak.issuer-uri}")
@@ -26,10 +30,6 @@ public class KeycloakService {
     private String clientSecret;
 
     private final RestTemplate restTemplate;
-
-    public KeycloakService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
 
     /**
      * Đăng nhập qua Keycloak (Direct Grant) sử dụng RestTemplate
@@ -51,6 +51,7 @@ public class KeycloakService {
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
 
         try {
+            log.debug("Gửi request POST tới Keycloak token endpoint: {}", tokenUrl);
             ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                     tokenUrl,
                     HttpMethod.POST,
@@ -59,11 +60,13 @@ public class KeycloakService {
             );
             return response.getBody();
         } catch (HttpClientErrorException e) {
+            log.error("Lỗi HTTP từ Keycloak ({}) khi authenticate user '{}'", e.getStatusCode(), username);
             if (e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.BAD_REQUEST) {
                 throw new RuntimeException("Tên đăng nhập hoặc mật khẩu không chính xác.");
             }
             throw new RuntimeException("Lỗi xác thực Keycloak: " + e.getMessage());
         } catch (Exception e) {
+            log.error("Lỗi kết nối tới Keycloak: {}", e.getMessage());
             throw new RuntimeException("Không thể kết nối tới máy chủ Keycloak: " + e.getMessage());
         }
     }
@@ -99,12 +102,17 @@ public class KeycloakService {
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userPayload, headers);
 
         try {
+            log.debug("Gửi request POST tới Keycloak Admin API tạo user: {}", createUserUrl);
             restTemplate.exchange(createUserUrl, HttpMethod.POST, requestEntity, Void.class);
+            log.info("Tạo thành công user '{}' trên Keycloak Admin API", username);
         } catch (HttpClientErrorException.Conflict e) {
+            log.warn("Trùng lặp username hoặc email khi đăng ký: username='{}', email='{}'", username, email);
             throw new RuntimeException("Tên đăng nhập hoặc Email đã tồn tại trong hệ thống.");
         } catch (HttpClientErrorException e) {
+            log.error("Lỗi Keycloak Admin API ({}): {}", e.getStatusCode(), e.getResponseBodyAsString());
             throw new RuntimeException("Lỗi tạo user trên Keycloak (" + e.getStatusCode() + "): Hãy kiểm tra Service Account Roles.");
         } catch (Exception e) {
+            log.error("Lỗi ngoại lệ khi tạo user: {}", e.getMessage());
             throw new RuntimeException("Lỗi kết nối Keycloak Admin: " + e.getMessage());
         }
     }
@@ -139,6 +147,7 @@ public class KeycloakService {
             }
             throw new RuntimeException("Không nhận được access_token từ Keycloak.");
         } catch (Exception e) {
+            log.error("Không thể lấy Service Account Token từ Keycloak: {}", e.getMessage());
             throw new RuntimeException("Không thể lấy Service Account Token từ Keycloak: " + e.getMessage());
         }
     }

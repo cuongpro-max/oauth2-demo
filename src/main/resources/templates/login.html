@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng nhập - OAuth2 Demo</title>
+    <title th:text="#{login.title}">Đăng nhập - OAuth2 Demo</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -11,26 +11,47 @@
             padding: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
+        .lang-bar {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        .lang-bar a {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+        }
+        .lang-bar a:hover {
+            background: rgba(255, 255, 255, 0.45);
+            transform: translateY(-1px);
+        }
         .login-card {
             background: #ffffff;
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
             width: 100%;
-            max-width: 420px;
+            max-width: 430px;
         }
         .login-card h2 {
             margin: 0 0 10px 0;
-            color: #333333;
+            color: #2d3748;
             text-align: center;
             font-size: 26px;
         }
         .login-card p.subtitle {
-            color: #777777;
+            color: #718096;
             text-align: center;
             margin: 0 0 25px 0;
             font-size: 14px;
@@ -41,21 +62,22 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #444444;
+            color: #4a5568;
             font-size: 14px;
             font-weight: 600;
         }
         .form-group input {
             width: 100%;
             padding: 12px 14px;
-            border: 1px solid #dcdfe6;
-            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
             font-size: 15px;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
         .form-group input:focus {
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
         }
         .btn-submit {
             width: 100%;
@@ -63,21 +85,22 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s, transform 0.1s;
             margin-top: 5px;
         }
         .btn-submit:hover {
-            opacity: 0.92;
+            opacity: 0.94;
+            transform: translateY(-1px);
         }
         .alert-error {
             background-color: #fde8e8;
             color: #9b1c1c;
             padding: 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             margin-bottom: 20px;
             font-size: 14px;
             border: 1px solid #f8b4b4;
@@ -86,9 +109,9 @@
             text-align: center;
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid #f0f0f0;
+            border-top: 1px solid #edf2f7;
             font-size: 14px;
-            color: #666;
+            color: #718096;
         }
         .card-footer a {
             color: #667eea;
@@ -100,7 +123,7 @@
         }
         .sso-divider {
             text-align: center;
-            margin: 20px 0;
+            margin: 22px 0;
             position: relative;
         }
         .sso-divider::before {
@@ -110,41 +133,49 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: #eee;
+            background: #e2e8f0;
             z-index: 1;
         }
         .sso-divider span {
             background: white;
-            padding: 0 10px;
+            padding: 0 12px;
             position: relative;
             z-index: 2;
-            color: #999;
+            color: #a0aec0;
             font-size: 12px;
+            font-weight: 600;
         }
         .btn-sso {
             display: block;
             width: 100%;
             padding: 11px;
-            background: #f8f9fa;
-            color: #495057;
+            background: #f7fafc;
+            color: #4a5568;
             text-align: center;
             text-decoration: none;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
         }
         .btn-sso:hover {
-            background: #e9ecef;
+            background: #edf2f7;
+            color: #2d3748;
         }
     </style>
 </head>
 <body>
 
+<!-- Language Switcher Bar -->
+<div class="lang-bar">
+    <a th:href="@{/login(lang='vi')}">🇻🇳 Tiếng Việt</a>
+    <a th:href="@{/login(lang='en')}">🇬🇧 English</a>
+</div>
+
 <div class="login-card">
-    <h2>Đăng Nhập</h2>
-    <p class="subtitle">Đăng nhập tài khoản bảo mật qua Keycloak</p>
+    <h2 th:text="#{login.heading}">Đăng Nhập</h2>
+    <p class="subtitle" th:text="#{login.subtitle}">Đăng nhập tài khoản bảo mật qua Keycloak</p>
 
     <div th:if="${error != null}" class="alert-error" th:text="${error}">
         Lỗi đăng nhập
@@ -152,28 +183,29 @@
 
     <form th:action="@{/login}" method="post">
         <div class="form-group">
-            <label for="username">Tên đăng nhập (Username)</label>
-            <input type="text" id="username" name="username" th:value="${username}" placeholder="Nhập username" required autofocus>
+            <label for="username" th:text="#{login.username}">Tên đăng nhập (Username)</label>
+            <input type="text" id="username" name="username" th:value="${username}" th:placeholder="#{login.username.placeholder}" required autofocus>
         </div>
 
         <div class="form-group">
-            <label for="password">Mật khẩu (Password)</label>
-            <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+            <label for="password" th:text="#{login.password}">Mật khẩu (Password)</label>
+            <input type="password" id="password" name="password" th:placeholder="#{login.password.placeholder}" required>
         </div>
 
-        <button type="submit" class="btn-submit">Đăng Nhập</button>
+        <button type="submit" class="btn-submit" th:text="#{login.button}">Đăng Nhập</button>
     </form>
 
     <div class="sso-divider">
-        <span>HOẶC</span>
+        <span th:text="#{app.or}">HOẶC</span>
     </div>
 
-    <a th:href="@{/oauth2/authorization/keycloak}" class="btn-sso">
+    <a th:href="@{/oauth2/authorization/keycloak}" class="btn-sso" th:text="#{login.sso}">
         🌐 Đăng nhập qua Keycloak SSO Portal
     </a>
 
     <div class="card-footer">
-        Chưa có tài khoản? <a th:href="@{/register}">Đăng ký ngay</a>
+        <span th:text="#{login.no_account}">Chưa có tài khoản?</span>
+        <a th:href="@{/register}" th:text="#{login.register_link}">Đăng ký ngay</a>
     </div>
 </div>
 

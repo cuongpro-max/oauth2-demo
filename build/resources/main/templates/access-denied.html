@@ -2,21 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>403 - Access Denied</title>
+    <title th:text="#{error.access_denied.title}">403 - Access Denied</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f4f6f9; }
-        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto; text-align: center; border-top: 4px solid #dc3545; }
-        h1 { color: #dc3545; font-size: 28px; margin-bottom: 10px; }
-        p { color: #666; font-size: 15px; margin-bottom: 25px; }
-        .btn { display: inline-block; padding: 10px 24px; color: white; background-color: #007bff; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; }
-        .btn:hover { background-color: #0056b3; }
+        .card { background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); max-width: 500px; margin: 0 auto; text-align: center; border-top: 5px solid #dc3545; }
+        h1 { color: #dc3545; font-size: 26px; margin-bottom: 12px; }
+        p { color: #666; font-size: 15px; margin-bottom: 25px; line-height: 1.5; }
+        .btn { display: inline-block; padding: 11px 24px; color: white; background: #667eea; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.92; }
     </style>
 </head>
 <body>
 <div class="card">
-    <h1>403 - Truy cập bị từ chối</h1>
-    <p>Bạn không có quyền (Role) phù hợp để truy cập vào trang này.</p>
-    <a class="btn" th:href="@{/profile}">Quay lại Profile</a>
+    <h1 th:text="#{error.access_denied.heading}">403 - Truy cập bị từ chối</h1>
+    <p th:text="#{error.access_denied.message}">Bạn không có quyền (Role) phù hợp để truy cập vào trang này.</p>
+    <a class="btn" th:href="@{/profile}" th:text="#{error.access_denied.back}">Quay lại Trang Cá Nhân</a>
 </div>
 </body>
 </html>

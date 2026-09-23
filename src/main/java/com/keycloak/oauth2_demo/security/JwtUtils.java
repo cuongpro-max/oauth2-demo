@@ -1,12 +1,14 @@
 package com.keycloak.oauth2_demo.security;
 
 import com.nimbusds.jwt.SignedJWT;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Slf4j
 @Component
 public class JwtUtils {
 
@@ -21,7 +23,7 @@ public class JwtUtils {
             SignedJWT signedJWT = SignedJWT.parse(token);
             return signedJWT.getJWTClaimsSet().getClaims();
         } catch (Exception e) {
-            System.err.println("Lỗi giải mã JWT: " + e.getMessage());
+            log.error("Lỗi giải mã JWT: {}", e.getMessage());
             return Collections.emptyMap();
         }
     }
@@ -71,6 +73,7 @@ public class JwtUtils {
             }
         }
 
+        log.debug("Trích xuất được {} GrantedAuthorities từ JWT", authorities.size());
         return authorities;
     }
 

@@ -37,11 +37,16 @@ public class SecurityConfig {
         oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}/");
 
         http
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/**")
+            )
             .securityContext(context -> context
                 .securityContextRepository(new HttpSessionSecurityContextRepository())
             )
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/login", "/register", "/public/**", "/error", "/css/**", "/js/**", "/access-denied").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/user").hasAnyRole("USER", "user")
                 .requestMatchers("/manage").hasAnyRole("MANAGE", "manage", "MANAGER", "manager")
                 .requestMatchers("/admin").hasAnyRole("ADMIN", "admin")
