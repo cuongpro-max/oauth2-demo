@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>403 - Access Denied</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f4f6f9; }
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto; text-align: center; border-top: 4px solid #dc3545; }
+        h1 { color: #dc3545; font-size: 28px; margin-bottom: 10px; }
+        p { color: #666; font-size: 15px; margin-bottom: 25px; }
+        .btn { display: inline-block; padding: 10px 24px; color: white; background-color: #007bff; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; }
+        .btn:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>403 - Truy cập bị từ chối</h1>
+    <p>Bạn không có quyền (Role) phù hợp để truy cập vào trang này.</p>
+    <a class="btn" th:href="@{/profile}">Quay lại Profile</a>
+</div>
+</body>
+</html>

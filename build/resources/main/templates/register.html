@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký - OAuth2 Demo</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .register-card {
+            background: #ffffff;
+            padding: 35px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 480px;
+        }
+        .register-card h2 {
+            margin: 0 0 10px 0;
+            color: #333333;
+            text-align: center;
+            font-size: 26px;
+        }
+        .register-card p.subtitle {
+            color: #777777;
+            text-align: center;
+            margin: 0 0 25px 0;
+            font-size: 14px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #444444;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            border-color: #667eea;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            opacity: 0.92;
+        }
+        .alert-error {
+            background-color: #fde8e8;
+            color: #9b1c1c;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #f8b4b4;
+        }
+        .card-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #666;
+        }
+        .card-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .card-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-card">
+    <h2>Đăng Ký Tài Khoản</h2>
+    <p class="subtitle">Tạo tài khoản mới và kết nối tự động với Keycloak</p>
+
+    <div th:if="${error != null}" class="alert-error" th:text="${error}">
+        Lỗi đăng ký
+    </div>
+
+    <form th:action="@{/register}" method="post">
+        <div class="form-group">
+            <label for="username">Tên đăng nhập (Username) *</label>
+            <input type="text" id="username" name="username" th:value="${username}" placeholder="Nhập username" required autofocus>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Địa chỉ Email *</label>
+            <input type="email" id="email" name="email" th:value="${email}" placeholder="example@email.com" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="firstName">Họ</label>
+                <input type="text" id="firstName" name="firstName" th:value="${firstName}" placeholder="Họ">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Tên</label>
+                <input type="text" id="lastName" name="lastName" th:value="${lastName}" placeholder="Tên">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mật khẩu *</label>
+            <input type="password" id="password" name="password" placeholder="Tối thiểu 6 ký tự" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Xác nhận mật khẩu *</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Đăng Ký Ngay</button>
+    </form>
+
+    <div class="card-footer">
+        Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a>
+    </div>
+</div>
+
+</body>
+</html>

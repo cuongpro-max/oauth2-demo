@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Portal - OAuth2 Keycloak Demo</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f4f6f9; }
+        .card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; border-top: 4px solid #ffc107; }
+        h1 { color: #d39e00; }
+        .btn { display: inline-block; padding: 10px 20px; color: white; background-color: #6c757d; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; margin-top: 15px; }
+        .btn:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Trang Quản Lý (Manager)</h1>
+    <p>Chào mừng <strong th:text="${username}">Manager</strong> đến với khu vực quản lý.</p>
+    <p>Bạn có quyền quản lý đơn hàng, báo cáo hoạt động và phân bổ tài nguyên.</p>
+    <a class="btn" th:href="@{/profile}">Quay lại Profile</a>
+</div>
+</body>
+</html>
